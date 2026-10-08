@@ -1,23 +1,19 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-
+const createApp = require("./app");
+const { getConfig } = require("./config/env");
 const connectDB = require("./config/db");
 
-const app = express();
+async function startServer() {
+  const config = getConfig();
 
-app.use(cors());
-app.use(express.json());
+  await connectDB(config.mongoUri);
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "IssueFlow API is running",
+  const app = createApp({ clientOrigin: config.clientOrigin });
+  app.listen(config.port, () => {
+    console.log(`Server running on port ${config.port}`);
   });
-});
+}
 
-const PORT = process.env.PORT || 5001;
-
-connectDB();
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+startServer().catch((error) => {
+  console.error(`Server startup failed: ${error.message}`);
+  process.exit(1);
 });
