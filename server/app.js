@@ -4,8 +4,9 @@ const express = require("express");
 const errorHandler = require("./middleware/errorHandler");
 const notFound = require("./middleware/notFound");
 const healthRoutes = require("./routes/healthRoutes");
+const authRoutes = require("./routes/authRoutes");
 
-function createApp({ clientOrigin }) {
+function createApp({ clientOrigin, jwtSecret }) {
   const app = express();
 
   app.use(
@@ -18,6 +19,7 @@ function createApp({ clientOrigin }) {
   app.use(express.json({ limit: "10kb" }));
 
   app.use("/", healthRoutes);
+  app.use("/api/auth", authRoutes({ jwtSecret }));
   app.use(notFound);
   app.use(errorHandler);
 

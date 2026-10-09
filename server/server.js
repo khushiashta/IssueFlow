@@ -7,7 +7,7 @@ async function startServer() {
 
   await connectDB(config.mongoUri);
 
-  const app = createApp({ clientOrigin: config.clientOrigin });
+  const app = createApp({ clientOrigin: config.clientOrigin, jwtSecret: config.jwtSecret });
   app.listen(config.port, () => {
     console.log(`Server running on port ${config.port}`);
   });

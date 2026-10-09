@@ -8,6 +8,11 @@ function getConfig() {
     throw new Error("MONGO_URI is required. Set it in server/.env or the environment.");
   }
 
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret || !jwtSecret.trim()) {
+    throw new Error("JWT_SECRET is required. Set it in server/.env or the environment.");
+  }
+
   const rawPort = process.env.PORT || "5001";
   const port = Number(rawPort);
   if (!Number.isInteger(port) || port < 1 || port > 65535) {
@@ -28,7 +33,7 @@ function getConfig() {
     throw new Error("CLIENT_ORIGIN must be a valid HTTP or HTTPS origin without a path.");
   }
 
-  return { mongoUri, port, clientOrigin };
+  return { mongoUri, jwtSecret, port, clientOrigin };
 }
 
 module.exports = { getConfig };
