@@ -6,6 +6,7 @@ const notFound = require("./middleware/notFound");
 const healthRoutes = require("./routes/healthRoutes");
 const authRoutes = require("./routes/authRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const issueRoutes = require("./routes/issueRoutes");
 
 function createApp({ clientOrigin, jwtSecret }) {
   const app = express();
@@ -22,6 +23,7 @@ function createApp({ clientOrigin, jwtSecret }) {
   app.use("/", healthRoutes);
   app.use("/api/auth", authRoutes({ jwtSecret }));
   app.use("/api/projects", projectRoutes({ jwtSecret }));
+  app.use("/api/projects", issueRoutes({ jwtSecret }));
   app.use(notFound);
   app.use(errorHandler);
 
