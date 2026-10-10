@@ -1,0 +1,20 @@
+const express = require("express");
+
+const createProjectController = require("../controllers/projectController");
+const requireAuth = require("../middleware/requireAuth");
+
+function projectRoutes({ jwtSecret }) {
+  const router = express.Router();
+  const controller = createProjectController();
+
+  router.use(requireAuth(jwtSecret));
+  router.post("/", controller.create);
+  router.get("/", controller.list);
+  router.get("/:id", controller.get);
+  router.patch("/:id", controller.update);
+  router.delete("/:id", controller.remove);
+
+  return router;
+}
+
+module.exports = projectRoutes;
