@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { apiRequest } from '../lib/api'
+import ProjectIssues from './ProjectIssues'
 
 function useProjectError() {
   const { logout } = useAuth()
@@ -332,6 +333,7 @@ export function ProjectDetailPage() {
       {!editing && !project.description && (
         <p className="mt-6 text-sm text-slate-600">This project does not have a description.</p>
       )}
+      <ProjectIssues key={projectId} projectId={projectId} />
     </section>
   )
 }
