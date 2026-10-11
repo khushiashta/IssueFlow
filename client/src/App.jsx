@@ -1,33 +1,8 @@
 import { BrowserRouter, Link, Navigate, NavLink, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { LoginPage, RegisterPage } from './pages/AuthPages'
+import DashboardPage from './pages/DashboardPage'
 import { ProjectDetailPage, ProjectsPage } from './pages/ProjectsPages'
-
-function Dashboard() {
-  return (
-    <section className="mx-auto max-w-5xl">
-      <div className="mb-8">
-        <p className="mb-2 text-sm font-medium text-slate-500">Workspace</p>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-950">Dashboard</h1>
-        <p className="mt-2 text-sm leading-6 text-slate-600">
-          Welcome to IssueFlow. This is the starting point for your team’s issue tracking workspace.
-        </p>
-      </div>
-      <div className="rounded-lg border border-slate-200 bg-white px-6 py-8 sm:px-8">
-        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-blue-50 text-blue-700" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor" strokeWidth="1.7">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 5.75A1.75 1.75 0 0 1 6.75 4h10.5A1.75 1.75 0 0 1 19 5.75v12.5A1.75 1.75 0 0 1 17.25 20H6.75A1.75 1.75 0 0 1 5 18.25V5.75Z" />
-            <path strokeLinecap="round" d="M8.5 8.5h7m-7 3.5h7m-7 3.5h4" />
-          </svg>
-        </div>
-        <h2 className="mt-5 text-base font-semibold text-slate-900">Your workspace starts here</h2>
-        <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">
-          IssueFlow is ready to help organize your work. The dashboard will show your team’s projects and issues as those workflows are added.
-        </p>
-      </div>
-    </section>
-  )
-}
 
 function NotFound() {
   return (
@@ -123,7 +98,7 @@ function AppRoutes() {
       </Route>
       <Route element={<AuthGate />}>
         <Route path="/" element={<Shell />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<DashboardPage />} />
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="projects/:projectId" element={<ProjectDetailPage />} />
           <Route path="*" element={<NotFound />} />
