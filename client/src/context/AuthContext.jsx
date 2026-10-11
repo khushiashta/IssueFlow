@@ -1,24 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { apiRequest } from '../lib/api'
+import { apiRequest, clearStoredAuthToken, getStoredAuthToken, storeAuthToken } from '../lib/api'
 
 const AuthContext = createContext(null)
-const TOKEN_KEY = 'issueflow_token'
-
-function readToken() {
-  try {
-    return window.sessionStorage.getItem(TOKEN_KEY)
-  } catch {
-    return null
-  }
-}
-
-function clearToken() {
-  try {
-    window.sessionStorage.removeItem(TOKEN_KEY)
-  } catch {
-    // Storage may be unavailable; the in-memory auth state is still cleared.
-  }
-}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
@@ -26,7 +9,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let active = true
-    const token = readToken()
+    const token = getStoredAuthToken()
 
     if (!token) {
       setLoading(false)
@@ -38,7 +21,7 @@ export function AuthProvider({ children }) {
         if (active) setUser(data.user)
       })
       .catch((error) => {
-        if (error.status === 401) clearToken()
+        if (error.status === 401) clearStoredAuthToken()
         if (active) setUser(null)
       })
       .finally(() => {
@@ -60,7 +43,7 @@ export function AuthProvider({ children }) {
     // sessionStorage is accessible to JavaScript, so an XSS vulnerability could expose this token.
     // HttpOnly cookies would provide stronger protection against token theft if the backend is adapted later.
     try {
-      window.sessionStorage.setItem(TOKEN_KEY, data.token)
+      storeAuthToken(data.token)
     } catch {
       throw new Error('This browser could not store your session. Enable session storage and try again.')
     }
@@ -71,7 +54,7 @@ export function AuthProvider({ children }) {
   const login = useCallback((credentials) => authenticate('login', credentials), [authenticate])
   const register = useCallback((details) => authenticate('register', details), [authenticate])
   const logout = useCallback(() => {
-    clearToken()
+    clearStoredAuthToken()
     setUser(null)
   }, [])
 

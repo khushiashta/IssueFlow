@@ -1,10 +1,33 @@
 import { API_URL } from '../config/api'
 
+const TOKEN_KEY = 'issueflow_token'
+
+export function getStoredAuthToken() {
+  try {
+    return window.sessionStorage.getItem(TOKEN_KEY)
+  } catch {
+    return null
+  }
+}
+
+export function storeAuthToken(token) {
+  window.sessionStorage.setItem(TOKEN_KEY, token)
+}
+
+export function clearStoredAuthToken() {
+  try {
+    window.sessionStorage.removeItem(TOKEN_KEY)
+  } catch {
+    // In-memory auth state is still cleared if browser storage is unavailable.
+  }
+}
+
 export async function apiRequest(path, { token, ...options } = {}) {
   const headers = new Headers(options.headers)
   headers.set('Accept', 'application/json')
   if (options.body !== undefined) headers.set('Content-Type', 'application/json')
-  if (token) headers.set('Authorization', `Bearer ${token}`)
+  const authToken = token === undefined ? getStoredAuthToken() : token
+  if (authToken) headers.set('Authorization', `Bearer ${authToken}`)
 
   let response
   try {

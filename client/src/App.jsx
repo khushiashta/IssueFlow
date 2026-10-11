@@ -1,6 +1,7 @@
 import { BrowserRouter, Link, Navigate, NavLink, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { LoginPage, RegisterPage } from './pages/AuthPages'
+import { ProjectDetailPage, ProjectsPage } from './pages/ProjectsPages'
 
 function Dashboard() {
   return (
@@ -75,6 +76,18 @@ function Shell() {
             </svg>
             Dashboard
           </NavLink>
+          <NavLink
+            to="/projects"
+            className={({ isActive }) => `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-blue-50 text-blue-800' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+          >
+            <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 5.5h12M4 10h12M4 14.5h12" />
+              <circle cx="2.5" cy="5.5" r=".5" fill="currentColor" stroke="none" />
+              <circle cx="2.5" cy="10" r=".5" fill="currentColor" stroke="none" />
+              <circle cx="2.5" cy="14.5" r=".5" fill="currentColor" stroke="none" />
+            </svg>
+            Projects
+          </NavLink>
         </nav>
         <div className="mt-auto hidden border-t border-slate-200 px-5 py-4 md:block">
           <p className="truncate text-xs font-medium text-slate-700">{user?.name}</p>
@@ -111,6 +124,8 @@ function AppRoutes() {
       <Route element={<AuthGate />}>
         <Route path="/" element={<Shell />}>
           <Route index element={<Dashboard />} />
+          <Route path="projects" element={<ProjectsPage />} />
+          <Route path="projects/:projectId" element={<ProjectDetailPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Route>
